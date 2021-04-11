@@ -27,7 +27,7 @@ impl Compositor {
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
                 power_preference: if settings.antialiasing.is_none() {
-                    wgpu::PowerPreference::LowPower
+                    wgpu::PowerPreference::Default
                 } else {
                     wgpu::PowerPreference::HighPerformance
                 },
@@ -38,14 +38,12 @@ impl Compositor {
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
-                    label: Some(
-                        "iced_wgpu::window::compositor device descriptor",
-                    ),
                     features: wgpu::Features::empty(),
                     limits: wgpu::Limits {
                         max_bind_groups: 2,
                         ..wgpu::Limits::default()
                     },
+                    shader_validation: false,
                 },
                 None,
             )
@@ -105,7 +103,7 @@ impl iced_graphics::window::Compositor for Compositor {
         self.device.create_swap_chain(
             surface,
             &wgpu::SwapChainDescriptor {
-                usage: wgpu::TextureUsage::RENDER_ATTACHMENT,
+                usage: wgpu::TextureUsage::OUTPUT_ATTACHMENT,
                 format: self.settings.format,
                 present_mode: self.settings.present_mode,
                 width,
@@ -132,7 +130,6 @@ impl iced_graphics::window::Compositor for Compositor {
         );
 
         let _ = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-            label: Some("iced_wgpu::window::Compositor render pass"),
             color_attachments: &[wgpu::RenderPassColorAttachmentDescriptor {
                 attachment: &frame.output.view,
                 resolve_target: None,
