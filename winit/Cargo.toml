@@ -43,6 +43,10 @@ version = "0.3.6"
 version = "0.3"
 features = ["Document", "Window"]
 
+[target.'cfg(target_arch = "wasm32")'.dependencies.js-sys]
+version = "0.3"
+features = []
+
 [dependencies.sysinfo]
 version = "0.23"
 optional = true

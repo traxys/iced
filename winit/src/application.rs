@@ -159,6 +159,10 @@ where
         let document = window.document().unwrap();
         let body = document.body().unwrap();
 
+        let array = js_sys::Array::new();
+        let _ = array.push(&"Hello Console Log".into());
+        web_sys::console::log(&array);
+
         let _ = match dbg!(body.query_selector("#iced_root").unwrap()) {
             Some(e) => body
                 .replace_child(&canvas, &e)
