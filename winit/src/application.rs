@@ -164,9 +164,14 @@ where
         web_sys::console::log(&array);
 
         let _ = match dbg!(body.query_selector("#iced_root").unwrap()) {
-            Some(e) => body
-                .replace_child(&canvas, &e)
-                .expect("Could not replace iced_root"),
+            Some(e) => {
+                let array = js_sys::Array::new();
+                let _ = array.push(&"found iced_root".into());
+                web_sys::console::log(&array);
+
+                body.replace_child(&canvas, &e)
+                    .expect("Could not replace iced_root")
+            }
             None => body
                 .append_child(&canvas)
                 .expect("Append canvas to HTML body"),
